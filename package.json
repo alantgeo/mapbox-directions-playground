@@ -1,14 +1,17 @@
 {
   "name": "mapbox-directions-playground",
   "version": "0.1.0",
-  "private": true,
+  "license": "BSD-2-Clause",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@mapbox/mapbox-sdk": "^0.6.0",
+    "@turf/bbox": "^6.0.1",
     "core-js": "^2.6.5",
+    "mapbox-gl": "^0.53.1",
     "vue": "^2.6.6",
     "vuetify": "^1.5.5"
   },
