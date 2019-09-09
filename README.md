@@ -1,5 +1,7 @@
 # mapbox-directions-playground
 
+https://alantgeo.github.io/mapbox-directions-playground/dist/index.html?access_token=MAPBOX_ACCESS_TOKEN
+
 ## Project setup
 ```
 yarn install
