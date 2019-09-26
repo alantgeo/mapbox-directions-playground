@@ -438,7 +438,7 @@ export default {
                 excludes.push('ferry')
             }
 
-            return excludes.join(',')
+            return excludes.length ? excludes.join(',') : null
         }
     },
     methods: {
