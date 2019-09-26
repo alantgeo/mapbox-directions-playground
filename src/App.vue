@@ -50,6 +50,11 @@
                       <v-list-tile-title>Origin</v-list-tile-title>
                       <v-list-tile-sub-title>{{origin}}</v-list-tile-sub-title>
                   </v-list-tile-content>
+                  <v-list-tile-action>
+                      <v-btn icon ripple @click="removeOrigin">
+                          <v-icon color="grey lighten-1">close</v-icon>
+                      </v-btn>
+                  </v-list-tile-action>
               </v-list-tile>
               <v-list-tile v-if="waypoints.length" v-for="(waypoint, index) in waypoints">
                   <v-list-tile-avatar>
@@ -59,6 +64,11 @@
                       <v-list-tile-title>Waypoint {{index + 1}}</v-list-tile-title>
                       <v-list-tile-sub-title>{{waypoint}}</v-list-tile-sub-title>
                   </v-list-tile-content>
+                  <v-list-tile-action>
+                      <v-btn icon ripple @click="removeWaypoint(index)">
+                          <v-icon color="grey lighten-1">close</v-icon>
+                      </v-btn>
+                  </v-list-tile-action>
               </v-list-tile>
               <v-list-tile>
                   <v-list-tile-avatar>
@@ -68,6 +78,11 @@
                       <v-list-tile-title>Destination</v-list-tile-title>
                       <v-list-tile-sub-title>{{destination}}</v-list-tile-sub-title>
                   </v-list-tile-content>
+                  <v-list-tile-action>
+                      <v-btn icon ripple @click="removeDestination">
+                          <v-icon color="grey lighten-1">close</v-icon>
+                      </v-btn>
+                  </v-list-tile-action>
               </v-list-tile>
           </v-list>
           <v-layout row wrap ma-4>
@@ -296,33 +311,31 @@ export default {
             }
         },
         origin: function (origin) {
-            /*
-            this.map.getSource('origin').setData({
-                type: 'Feature',
-                properties: {},
-                geometry: {
-                    type: 'Point',
-                    coordinates: origin
-                }
-            });
-            */
-            this.originMarker
-                .setLngLat(origin)
-                .addTo(this.map);
+            if (origin) {
+                this.originMarker
+                    .setLngLat(origin)
+                    .addTo(this.map);
+                urlParams.set('origin', origin.join(','))
+            } else {
+                this.originMarker.remove()
+                urlParams.delete('origin')
+            }
 
             this.updateDirections()
-
-            urlParams.set('origin', origin.join(','))
             this.updateUrl()
         },
         destination: function (destination) {
-            this.destinationMarker
-                .setLngLat(destination)
-                .addTo(this.map);
-            
-            this.updateDirections()
+            if (destination) {
+                this.destinationMarker
+                    .setLngLat(destination)
+                    .addTo(this.map);
+                urlParams.set('destination', destination.join(','))
+            } else {
+                this.destinationMarker.remove()
+                urlParams.delete('destination')
+            }
 
-            urlParams.set('destination', destination.join(','))
+            this.updateDirections()
             this.updateUrl()
         },
         waypoints: function (waypoints) {
@@ -442,6 +455,15 @@ export default {
         }
     },
     methods: {
+        removeOrigin: function () {
+            this.origin = null
+        },
+        removeDestination: function () {
+            this.destination = null
+        },
+        removeWaypoint: function (index) {
+            this.waypoints.splice(index, 1)
+        },
         updateUrl: () => {
             history.pushState(null, '', window.location.pathname + '?' + urlParams.toString())
         },
@@ -527,6 +549,8 @@ export default {
                         this.error = err
                         this.routes = null
                     })
+            } else {
+                this.routes = null
             }
         },
         mapLoaded: function () {
